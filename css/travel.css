@@ -346,7 +346,7 @@ body {
 
   .country-inner {
     grid-template-columns: 1fr;
-    gap: -45px;
+    /* gap: -45px; */
      text-align: center;
     justify-items: center;
   }
