@@ -139,11 +139,17 @@ overflow-x: hidden;
   /* aspect-ratio: 4 / 3; */
   object-fit: cover;
   display: block;
-  height:260px;
-  border-radius: 12px;
-  box-shadow:
+  height:250px;
+  /* border-radius: 12px; */
+  /* box-shadow:
     0 12px 30px rgba(0,0,0,0.12),
-    0 2px 6px rgba(0,0,0,0.08);
+    0 2px 6px rgba(0,0,0,0.08); */
+          --r: 15px; 
+  padding: var(--r);
+  filter: grayscale(.2) drop-shadow(0 0 1px #0005) drop-shadow(0 0 1px #0005);
+  background: 
+    radial-gradient(50% 50%,#0000 50%,#fff 50%) round 
+     var(--r) var(--r)/calc(2*var(--r)) calc(2*var(--r));
 }
 
 /* Pull image toward curve */
@@ -272,11 +278,12 @@ overflow-x: hidden;
   .country img {
     max-width: 420px; /* shrink image */
     height: 220px;
+
   }
 
   /* Reduce pull toward curve */
   .country:nth-child(odd) img {
-    margin-left: clamp(50px, 5vw, 800px);
+    margin-left: clamp(20px, 2vw, 40px);
   }
 
   .country:nth-child(even) img {
@@ -364,7 +371,7 @@ overflow-x: hidden;
   }
 
     .country:nth-child(odd) .country-text {
-    margin-right: calc(5.5 * var(--offset));
+    margin-right: calc(6.5 * var(--offset));
   }
   .country:nth-child(n+2) .country-text {
     margin-top:-100px;
