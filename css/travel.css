@@ -365,5 +365,11 @@ body {
   .journey-end {
   margin-top: -200px;
 }
+  .country-text {
+    --offset: clamp(30px, 5vw, 708px);
+  }
 
+    .country:nth-child(even) .country-text {
+    margin-right: calc(2 * var(--offset));
+  }
 }
