@@ -346,12 +346,12 @@ body {
 
   .country-inner {
     grid-template-columns: 1fr;
-    /* gap: -45px; */
+    gap: -45px;
      text-align: center;
     justify-items: center;
   }
 
-  .country-inner img {
+  .country img {
     display: none !important;
   }
   .country-text {
