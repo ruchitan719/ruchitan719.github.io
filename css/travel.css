@@ -1,7 +1,11 @@
+* {
+  box-sizing: border-box;
+}
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
-/* overflow-x: hidden; */
+    padding: 0;
+overflow-x: hidden;
 }
 
 /* ================= HERO ================= */
@@ -346,7 +350,7 @@ body {
 
   .country-inner {
     grid-template-columns: 1fr;
-    /* gap: -45px; */
+    /* gap: 25px; */
      text-align: center;
     justify-items: center;
   }
@@ -354,22 +358,22 @@ body {
   .country img {
     display: none;
   }
-  /* .country-text {
-    margin: 0;
-    text-align: center;
-  } */
+    .country-text {
+    --offset: clamp(30px, 5vw, 708px);
 
+  }
+
+    .country:nth-child(odd) .country-text {
+    margin-right: calc(5.5 * var(--offset));
+  }
+  .country:nth-child(n+2) .country-text {
+    margin-top:-100px;
+  }
+  
   .country-name {
     font-size: 3rem;
   }
   .journey-end {
   margin-top: -200px;
 }
-  .country-text {
-    --offset: clamp(30px, 5vw, 708px);
-  }
-
-    .country:nth-child(even) .country-text {
-    margin-right: calc(2 * var(--offset));
-  }
 }
