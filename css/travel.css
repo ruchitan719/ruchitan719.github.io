@@ -352,7 +352,7 @@ body {
   }
 
   .country img {
-    display: none !important;
+    display: none;
   }
   .country-text {
     margin: 0;
@@ -365,14 +365,5 @@ body {
   .journey-end {
   margin-top: -200px;
 }
-  .country-text {
-    --offset: clamp(20px, 3vw, 48px);
-  }
 
-    .country:nth-child(even) .country-text {
-    margin-left: calc(2.5 * var(--offset));
-  }
-    .country:nth-child(odd) .country-text {
-    margin-left: calc(2 * var(--offset));
-  }
 }
