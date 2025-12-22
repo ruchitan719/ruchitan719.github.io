@@ -339,7 +339,7 @@ body {
 }
 /* ================= MOBILE ================= */
 
-@media (max-width: 800px) {
+@media (max-width: 700px) {
   #journey-svg {
     display: none;
   }
@@ -349,7 +349,9 @@ body {
     gap: -45px;
   }
 
-
+.country img {
+  display: none;
+}
   .country-text {
     margin: 0;
     text-align: center;
