@@ -56,14 +56,8 @@ body {
  /* overflow-x: hidden;  */
 }
 
- .gif-container {
+video {
   width: 100%;
-  overflow: hidden;
-}
-
-.gif-container img {
-  width: 100%;
-  /* margin-top: 15px; */
   height: auto;
   display: block;
 }
