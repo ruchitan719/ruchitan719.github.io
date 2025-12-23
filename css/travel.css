@@ -371,7 +371,7 @@ overflow-x: hidden;
   }
 
     .country:nth-child(odd) .country-text {
-    margin-right: calc(3 * var(--offset));
+    margin-right: calc(3.8 * var(--offset));
   }
   .country:nth-child(n+2) .country-text {
     margin-top:-100px;
