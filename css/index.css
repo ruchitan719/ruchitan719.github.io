@@ -61,3 +61,22 @@ video {
   height: auto;
   display: block;
 }
+@media (min-width: 1024px) {
+  video {
+    max-height: 600px;
+  }
+}
+
+/* Tablets */
+@media (max-width: 1024px) {
+  video {
+    max-height: 450px;
+  }
+}
+
+/* Phones */
+@media (max-width: 768px) {
+  video {
+    max-height: 350px;
+  }
+}
