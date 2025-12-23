@@ -51,7 +51,19 @@
 }
 body {
   margin: 0;
-  padding: 50px;
+  padding-top: 50px;
   font-family: system-ui, sans-serif;
-/* overflow-x: hidden; */
+ /* overflow-x: hidden;  */
+}
+
+ .gif-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+.gif-container img {
+  width: 100%;
+  /* margin-top: 15px; */
+  height: auto;
+  display: block;
 }
