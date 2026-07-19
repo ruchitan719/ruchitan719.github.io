@@ -306,3 +306,51 @@ body.intro-locked{
     background:#D8D8D8;
 
 }
+
+/* ==========================================================
+   MOBILE STORY
+========================================================== */
+
+@media (max-width:767px){
+
+    .hero{
+        height:320vh;
+    }
+
+    .hero-sticky{
+        height:100svh;
+    }
+
+    /* Override the older 30vh offset: each video needs to fill the pinned
+       viewport on phones, just as it does on desktop. */
+    .story-video{
+        inset:0;
+        top:0;
+        width:100%;
+        height:100%;
+        object-position:58% center;
+    }
+
+    .hero-copy{
+        top:auto;
+        right:1.5rem;
+        bottom:14svh;
+        left:1.5rem;
+    }
+
+    .hero-title{
+        font-size:clamp(3rem,14vw,4.25rem);
+    }
+
+    .hero-subtitle{
+        max-width:18rem;
+        margin-top:1rem;
+        font-size:.95rem;
+        line-height:1.6;
+    }
+
+    .scroll-indicator{
+        bottom:-24svh;
+    }
+
+}

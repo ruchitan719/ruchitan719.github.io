@@ -43,6 +43,18 @@ function init(){
 
     setupIntro();
 
+    setupViewportRefresh();
+
+}
+
+function setupViewportRefresh(){
+
+    // Mobile browsers change viewport height on rotation. Recalculate the
+    // pinned scroll distances once that change has settled.
+    window.addEventListener("orientationchange", () => {
+        window.setTimeout(() => ScrollTrigger.refresh(), 250);
+    });
+
 }
 
 /* ==========================================================

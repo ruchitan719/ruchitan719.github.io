@@ -326,3 +326,58 @@ body.intro-locked{
 
 }
 
+/* ==========================================================
+   MOBILE STORY
+========================================================== */
+
+@media (max-width:767px){
+
+    .hero{
+        height:280vh;
+    }
+
+    .story-section{
+        height:280vh;
+    }
+
+    .journey-section{
+        height:330vh;
+        margin-top:-140vh;
+    }
+
+    .hero-sticky,
+    .scene-sticky{
+        height:100svh;
+    }
+
+    .story-video{
+        inset:0;
+        top:0;
+        width:100%;
+        height:100%;
+        object-position:58% center;
+    }
+
+    .hero-copy{
+        top:auto;
+        right:1.5rem;
+        bottom:14svh;
+        left:1.5rem;
+    }
+
+    .hero-title{
+        font-size:clamp(3rem,14vw,4.25rem);
+    }
+
+    .hero-subtitle{
+        max-width:18rem;
+        margin-top:1rem;
+        font-size:.95rem;
+        line-height:1.6;
+    }
+
+    .scroll-indicator{
+        bottom:-24svh;
+    }
+
+}
