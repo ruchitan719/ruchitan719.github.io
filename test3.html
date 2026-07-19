@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Creative Studio Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+* { font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+html, body {
+  margin: 0; padding: 0;
+  background: #E4E4E4;
+  color: #F4F1E8;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+@keyframes wordReveal {
+  from { opacity: 0; transform: translateY(10px); filter: blur(10px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+.word-reveal {
+  opacity: 0;
+  display: inline-block;
+  margin-right: 0.3em;
+  animation: wordReveal 0.8s ease forwards;
+}
+/* ===== HERO ===== */
+.hero {
+  position: relative; width: 100%; overflow: hidden;
+  background: #E4E4E4; min-height: 100vh;
+}
+@media (min-width: 768px) { .hero { height: 100vh; min-height: 800px; } }
+
+.hero-reveal-img {
+  position: absolute; top: 30vh; left: 0; right: 0; bottom: 0;
+  background-size: cover; background-repeat: no-repeat;
+  background-position: 60% center; z-index: 7; pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms ease-in-out;
+}
+@media (min-width: 768px) { .hero-reveal-img { top: 0; background-position: center; } }
+.hero-title {
+  position: absolute;
+  top: 40px; left: 40px;
+  z-index: 10; /* above both video (5) and reveal (7) */
+  color: black;
+  font-size: 48px;
+  font-weight: 600;
+  pointer-events: none; /* so it doesn't block your mouse from reaching the spotlight */
+}
+
+@media (min-width: 768px) { .hero-headline { font-size: 28px; } }
+/* ===== CANVAS (hidden) ===== */
+#reveal-canvas { display: none; position: absolute; inset: 0; pointer-events: none; }
+
+/* ===== BASE VIDEO + STILL HANDOFF ===== */
+.hero-base-video {
+  position: absolute; top: 30vh; left: 0; right: 0; bottom: 0;
+  width: 100%; height: calc(100% - 30vh);
+  object-fit: cover; object-position: 60% center;
+  z-index: 5;
+  transition: opacity 800ms ease-in-out;
+}
+@media (min-width: 768px) {
+  .hero-base-video { top: 0; height: 100%; object-position: center; }
+}
+.hero-base-still {
+  position: absolute; top: 30vh; left: 0; right: 0; bottom: 0;
+  background-size: cover; background-repeat: no-repeat; background-position: 60% center;
+  z-index: 5; opacity: 0;
+  /* transition: opacity 150ms ease-in-out; */
+}
+@media (min-width: 768px) {
+  .hero-base-still { top: 0; background-position: center; }
+}
+.scroll-sequence-wrapper {
+  position: relative;
+  height: 100vh; /* taller = more scroll distance to scrub through = slower/smoother playback */
+}
+
+.scroll-sequence-sticky {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: hidden;
+}
+
+#sequence-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.sequence-caption {
+  position: absolute;
+  left: 20%;
+  top: 8vh;
+  transform: translateX(-50%);
+  text-align: center;
+  color: blue;
+  z-index: 10;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.sequence-caption h2 {
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  font-weight: 600;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.6); /* keeps it readable over any frame */
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<main class="hero">
+  <!-- Base video: plays once, then hands off to a matching still image -->
+  <video id="base-video" class="hero-base-video" autoplay muted playsinline
+    src="../images/girl1.mp4"></video>
+
+  <!-- Reveal layer -->
+  <canvas id="reveal-canvas"></canvas>
+  <div class="hero-reveal-img" id="reveal-img"
+       style="background-image:url('../images/layer.png');">
+  </div>
+    <h1 class="hero-title" id="headline"></h1>
+    <!-- <video autoplay loop muted playsinline>
+  <source src="../images/Girl2p.mp4" type="video/mp4">
+</video> -->
+</main>
+<!-- Your new content goes here, AFTER </main>, not inside it -->
+ <div style="height: 15vh;"></div> <!-- breathing room -->
+<section class="scroll-sequence-wrapper" id="sequence-wrapper">
+  <div class="scroll-sequence-sticky">
+    <canvas id="sequence-canvas"></canvas>
+    <div class="sequence-caption" id="sequence-caption">
+      <h2>Coming down to earth.</h2>
+    </div>
+  </div>
+</section>
+  
+
+
+<script>
+(function() {
+  // Word reveal
+  const headline = document.getElementById('headline');
+  const text = "Hello, I'm Ruchita 🌸.";
+  const words = text.split(' ');
+  words.forEach(function(word, i) {
+    const span = document.createElement('span');
+    span.className = 'word-reveal';
+    span.textContent = word;
+    span.style.animationDelay = (1 + i * 0.05) + 's';
+    headline.appendChild(span);
+  });
+  // Base video -> still handoff
+const baseVideo = document.getElementById('base-video');
+let videoEnded = false;
+
+baseVideo.addEventListener('ended', function() {
+  videoEnded = true;
+  // video just stays visible on its last frame — no swap needed
+});
+
+function replayVideo() {
+  videoEnded = false;
+  baseVideo.currentTime = 0;
+  baseVideo.play().catch(function() {});
+}
+
+  // Replay the video if the hero fully scrolls out of view and back in
+  const heroSection = document.querySelector('.hero');
+  let hasLeftView = false;
+  const heroObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (!entry.isIntersecting) {
+        hasLeftView = true;
+      } else if (hasLeftView) {
+        hasLeftView = false;
+        replayVideo();
+      }
+    });
+  }, { threshold: 0 });
+  heroObserver.observe(heroSection);
+
+
+  // Spotlight reveal
+  const SPOTLIGHT_R = 260;
+  const canvas = document.getElementById('reveal-canvas');
+  const imgLayer = document.getElementById('reveal-img');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  const mouse = { x: -999, y: -999 };
+  const smooth = { x: -999, y: -999 };
+
+  window.addEventListener('mousemove', function(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  function loop() {
+    // While the video is still playing, keep the reveal layer fully masked off
+    if (!videoEnded) {
+      imgLayer.style.webkitMaskImage = 'none';
+      imgLayer.style.maskImage = 'none';
+      imgLayer.style.opacity = '0';
+      requestAnimationFrame(loop);
+      return;
+    }
+    imgLayer.style.opacity = '1';
+
+    smooth.x += (mouse.x - smooth.x) * 0.1;
+    smooth.y += (mouse.y - smooth.y) * 0.1;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    var grad = ctx.createRadialGradient(smooth.x, smooth.y, 0, smooth.x, smooth.y, SPOTLIGHT_R);
+    grad.addColorStop(0, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.4, 'rgba(255,255,255,1)');
+    grad.addColorStop(0.6, 'rgba(255,255,255,0.75)');
+    grad.addColorStop(0.75, 'rgba(255,255,255,0.4)');
+    grad.addColorStop(0.88, 'rgba(255,255,255,0.12)');
+    grad.addColorStop(1, 'rgba(255,255,255,0)');
+
+    ctx.beginPath();
+    ctx.arc(smooth.x, smooth.y, SPOTLIGHT_R, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    var dataUrl = canvas.toDataURL();
+    imgLayer.style.webkitMaskImage = 'url(' + dataUrl + ')';
+    imgLayer.style.maskImage = 'url(' + dataUrl + ')';
+    imgLayer.style.webkitMaskSize = '100% 100%';
+    imgLayer.style.maskSize = '100% 100%';
+
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+
+ // ---- Scroll-linked image sequence ----
+  const FRAME_COUNT = 192; // change to match how many frames you exported
+  const FRAME_PATH = (i) => `frames/Girl2-${i + 1}.png`;
+
+  const sequenceCanvas = document.getElementById('sequence-canvas');
+  const sequenceCtx = sequenceCanvas.getContext('2d');
+  const wrapper = document.getElementById('sequence-wrapper');
+
+  const images = [];
+  let loadedCount = 0;
+
+  function resizeSequenceCanvas() {
+    sequenceCanvas.width = sequenceCanvas.clientWidth;
+    sequenceCanvas.height = sequenceCanvas.clientHeight;
+  }
+  resizeSequenceCanvas();
+  window.addEventListener('resize', resizeSequenceCanvas);
+
+  function drawFrame(index) {
+    const img = images[index];
+    if (!img || !img.complete) return;
+    sequenceCtx.clearRect(0, 0, sequenceCanvas.width, sequenceCanvas.height);
+
+    const canvasRatio = sequenceCanvas.width / sequenceCanvas.height;
+    const imgRatio = img.width / img.height;
+    let drawW, drawH, offsetX, offsetY;
+    if (imgRatio > canvasRatio) {
+      drawH = sequenceCanvas.height;
+      drawW = drawH * imgRatio;
+      offsetX = (sequenceCanvas.width - drawW) / 2;
+      offsetY = 0;
+    } else {
+      drawW = sequenceCanvas.width;
+      drawH = drawW / imgRatio;
+      offsetX = 0;
+      offsetY = (sequenceCanvas.height - drawH) / 2;
+    }
+    sequenceCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
+  }
+
+  function preloadImages() {
+    for (let i = 0; i < FRAME_COUNT; i++) {
+      const img = new Image();
+      img.src = FRAME_PATH(i);
+      img.onload = function() {
+        loadedCount++;
+        if (i === 0) drawFrame(0);
+      };
+      images.push(img);
+    }
+  }
+  preloadImages();
+
+function updateFrameFromScroll() {
+  const rect = wrapper.getBoundingClientRect();
+  const scrollableDistance = wrapper.offsetHeight - window.innerHeight;
+  const progress = Math.min(Math.max(-rect.top / scrollableDistance, 0), 1);
+  const frameIndex = Math.round(progress * (FRAME_COUNT - 1));
+  drawFrame(frameIndex, false);
+  if (progress >= 1) drawFrame(FRAME_COUNT - 1, true); // force-lock final frame once scroll passes 100%
+}
+
+let sequenceProgress = 0; // 0 = first frame, 1 = last frame
+const SCROLL_SPEED = 0.0005; // lower = need more scrolling to get through it; raise = faster
+
+function isWrapperActive() {
+  const rect = wrapper.getBoundingClientRect();
+  return rect.top <= 1 && rect.bottom >= window.innerHeight - 1;
+}
+
+function setProgress(p) {
+  sequenceProgress = Math.min(Math.max(p, 0), 1);
+  const frameIndex = Math.round(sequenceProgress * (FRAME_COUNT - 1));
+  drawFrame(frameIndex);
+  // fade the caption in during the middle of the sequence, out near the ends
+  const caption = document.getElementById('sequence-caption');
+  const showText = sequenceProgress > 0.15 && sequenceProgress < 0.9;
+  caption.style.opacity = showText ? '1' : '0';
+}
+
+// Mouse wheel / trackpad
+window.addEventListener('wheel', function(e) {
+  if (!isWrapperActive()) return; // not our section, let the browser scroll normally
+
+  const scrollingDown = e.deltaY > 0;
+  const scrollingUp = e.deltaY < 0;
+
+  if (sequenceProgress >= 1 && scrollingDown) return; // finished — let them scroll past
+  if (sequenceProgress <= 0 && scrollingUp) return;   // at start — let them scroll back up
+
+  e.preventDefault(); // block real scrolling, drive the sequence instead
+  setProgress(sequenceProgress + e.deltaY * SCROLL_SPEED);
+}, { passive: false });
+
+// Touch (phones/tablets)
+let touchStartY = null;
+window.addEventListener('touchstart', function(e) {
+  if (isWrapperActive()) touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+window.addEventListener('touchmove', function(e) {
+  if (touchStartY === null || !isWrapperActive()) return;
+  const currentY = e.touches[0].clientY;
+  const deltaY = touchStartY - currentY;
+  const scrollingDown = deltaY > 0;
+  const scrollingUp = deltaY < 0;
+
+  if (sequenceProgress >= 1 && scrollingDown) { touchStartY = null; return; }
+  if (sequenceProgress <= 0 && scrollingUp) { touchStartY = null; return; }
+
+  e.preventDefault();
+  setProgress(sequenceProgress + deltaY * SCROLL_SPEED * 3);
+  touchStartY = currentY;
+}, { passive: false
+
+});
+})();
+</script>
+</body>
+</html>

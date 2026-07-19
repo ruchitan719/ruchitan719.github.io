@@ -1,13 +1,20 @@
-fetch("/partials/nav.html")
-  .then(res => res.text())
-  .then(html => {
-    document.body.insertAdjacentHTML("afterbegin", html);
+(function() {
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const mobileNav = document.getElementById('mobile-nav');
+  let menuOpen = false;
 
-    // Optional: auto-highlight active page
-    const links = document.querySelectorAll(".main-nav a");
-    links.forEach(link => {
-      if (link.href === window.location.href) {
-        link.classList.add("active");
-      }
+  hamburgerBtn.addEventListener('click', function() {
+    menuOpen = !menuOpen;
+    hamburgerBtn.classList.toggle('open', menuOpen);
+    mobileNav.classList.toggle('open', menuOpen);
+    hamburgerBtn.setAttribute('aria-label', menuOpen ? 'Close menu' : 'Open menu');
+  });
+
+  mobileNav.querySelectorAll('a').forEach(function(link) {
+    link.addEventListener('click', function() {
+      menuOpen = false;
+      hamburgerBtn.classList.remove('open');
+      mobileNav.classList.remove('open');
     });
   });
+})();

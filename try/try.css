@@ -1,0 +1,328 @@
+/* ==========================================================
+   RESET
+========================================================== */
+
+*,
+*::before,
+*::after{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+*{
+    font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+/* ==========================================================
+   VARIABLES
+========================================================== */
+
+:root{
+
+    --background:#E4E4E4;
+    --text:#000000;
+    --heading:#F2EFE6;
+
+}
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
+
+html,
+body{
+
+    width:100%;
+    overflow-x:hidden;
+
+    background:var(--background);
+    color:var(--text);
+
+}
+
+body{
+
+    min-height:100vh;
+
+}
+
+/* ==========================================================
+   HERO
+========================================================== */
+
+.hero{
+    position:relative;
+    height:300vh;
+    background:var(--background);
+}
+
+.hero-sticky{
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* Separate scroll scenes. GSAP pins each .scene-sticky while its parent
+   provides the scroll distance. The negative margin creates a 20vh overlap
+   between the two otherwise independent sections. */
+.story-section{
+    position:relative;
+    height:300vh;
+}
+
+.scene-sticky{
+    position:relative;
+    height:100vh;
+    overflow:hidden;
+}
+
+.journey-section{
+    z-index:1;
+    margin-top:-120vh;
+    /* Transparent while it overlaps the transition hero. */
+    background:transparent;
+}
+
+/* NEW — this is what prevents the premature-scroll bug, without touching height */
+html.intro-locked,
+body.intro-locked{
+    overflow:hidden;
+    height:100vh;
+}
+
+/* ==========================================================
+   ALL HERO VIDEOS
+========================================================== */
+
+.story-video{
+
+    position:absolute;
+
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    object-position:center;
+
+    display:block;
+
+}
+
+/* Desktop */
+
+@media(min-width:768px){
+
+.story-video{
+
+    object-position:center;
+
+}
+
+}
+
+/* Mobile */
+
+@media(max-width:767px){
+
+.story-video{
+
+    top:30vh;
+
+    left:0;
+
+    width:100%;
+
+    height:70vh;
+
+    object-fit:cover;
+
+    object-position:60% center;
+
+}
+
+}
+
+/* ==========================================================
+   VIDEO STACK
+========================================================== */
+
+#intro-video{
+
+    z-index:1;
+
+    opacity:1;
+
+}
+
+#transition-video{
+
+    z-index:2;
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+#journey-video{
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+/* During the hand-off only one video should paint at a time. */
+.story-video{
+
+    will-change:opacity;
+
+}
+
+/* ==========================================================
+   HERO COPY
+========================================================== */
+
+.hero-copy{
+
+    position:absolute;
+
+    top:10vh;
+
+    left:8vw;
+
+    z-index:20;
+
+}
+
+.hero-title{
+
+    font-family:'Fraunces',serif;
+
+    font-size:clamp(3.5rem,7vw,5.5rem);
+
+    font-weight:500;
+
+    line-height:1;
+
+    color:#2D2A32;
+
+}
+
+.hero-subtitle{
+
+    margin-top:1.5rem;
+
+    max-width:420px;
+
+    font-size:1.05rem;
+
+    line-height:1.8;
+
+    color:#5D5A63;
+
+}
+
+/* ==========================================================
+   SCROLL INDICATOR
+========================================================== */
+
+.scroll-indicator{
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-38vh;
+
+    opacity:0;
+
+    transform:translateY(16px);
+
+}
+
+.scroll-arrow{
+
+    margin-top:.8rem;
+
+    font-size:1.3rem;
+
+    animation:floatArrow 2s ease-in-out infinite;
+
+}
+
+@keyframes floatArrow{
+
+    0%,100%{
+
+        transform:translateY(0);
+
+    }
+
+    50%{
+
+        transform:translateY(8px);
+
+    }
+
+}
+
+/* ==========================================================
+   MAP
+========================================================== */
+
+.map-section{
+
+    position:relative;
+
+    min-height:100vh;
+
+    background:#F7F5EF;
+
+}
+
+/* ==========================================================
+   COMPASS
+========================================================== */
+
+.compass-section{
+
+    position:relative;
+
+    min-height:100vh;
+
+    background:#EEE9DD;
+
+}
+
+/* ==========================================================
+   ATLAS
+========================================================== */
+
+.atlas-section{
+
+    position:relative;
+
+    min-height:100vh;
+
+    background:#E4E4E4;
+
+}
+
+/* ==========================================================
+   CONTACT
+========================================================== */
+
+#contact-section{
+
+    min-height:40vh;
+
+    background:#D8D8D8;
+
+}
+

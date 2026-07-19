@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- ==========================================
+         META
+    =========================================== -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ruchita | Portfolio</title>
+
+    <!-- ==========================================
+         FONTS
+    =========================================== -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&display=swap"
+        rel="stylesheet">
+
+    <!-- ==========================================
+         CSS
+    =========================================== -->
+
+    <link rel="stylesheet" href="try.css">
+
+</head>
+
+<body>
+
+<!-- ==========================================================
+     HERO STORY
+========================================================== -->
+
+<section
+    id="hero-section"
+    class="hero">
+
+    <div class="hero-sticky">
+
+        <!-- ======================================
+             INTRO
+        ======================================= -->
+
+        <video
+            id="intro-video"
+            class="story-video"
+            autoplay
+            muted
+            playsinline
+            preload="auto">
+
+            <source
+                src="../images/intro.mp4"
+                type="video/mp4">
+
+        </video>
+
+        <!-- Transition stays in the intro hero. It becomes visible as soon
+             as the autoplaying intro has reached its end. -->
+        <video
+            id="transition-video"
+            class="story-video"
+            muted
+            playsinline
+            preload="auto">
+
+            <source
+                src="../images/transition.mp4"
+                type="video/mp4">
+
+        </video>
+
+        <!-- ======================================
+             COPY
+        ======================================= -->
+
+        <div class="hero-copy">
+
+            <h1 class="hero-title">
+
+                Hi, I'm Ruchita.
+
+            </h1>
+
+            <p class="hero-subtitle">
+
+                A collection of places, projects &amp; stories.
+
+            </p>
+
+            <div
+                id="scroll-indicator"
+                class="scroll-indicator">
+
+                <span>
+
+                    Let's wander.
+
+                </span>
+
+                <div class="scroll-arrow">
+
+                    ↓
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- Journey is its own section, entering before the hero pin releases so
+     its first frame can overlap the end of transition. -->
+<section id="journey-section" class="story-section journey-section">
+    <div class="scene-sticky">
+        <video id="journey-video" class="story-video" muted playsinline preload="auto">
+            <source src="../images/journey.mp4" type="video/mp4">
+        </video>
+    </div>
+</section>
+
+<!-- ==========================================================
+     MAP
+========================================================== -->
+
+<section
+    id="map-section"
+    class="map-section">
+
+</section>
+
+<!-- ==========================================================
+     COMPASS
+========================================================== -->
+
+<section
+    id="compass-section"
+    class="compass-section">
+
+</section>
+
+<!-- ==========================================================
+     ATLAS
+========================================================== -->
+
+<section
+    id="atlas-section"
+    class="atlas-section">
+
+</section>
+
+<!-- ==========================================================
+     CONTACT
+========================================================== -->
+
+<footer
+    id="contact-section">
+
+</footer>
+
+<!-- ==========================================
+     LIBRARIES
+========================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- ==========================================
+     MAIN JS
+========================================== -->
+
+<script src="try.js"></script>
+
+</body>
+
+</html>
+

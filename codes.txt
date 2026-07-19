@@ -1,0 +1,139 @@
+1. - JS /* ==========================================================
+   HEADLINE animated the title part
+
+========================================================== */
+
+function initHeadline() {
+
+    const words = CONFIG.headline.text.split(" ");
+
+    words.forEach((word, index) => {
+
+        const span = document.createElement("span");
+
+        span.className = "word-reveal";
+
+        span.textContent = word;
+
+        span.style.animationDelay =
+            `${CONFIG.headline.initialDelay + index * CONFIG.headline.stagger}s`;
+
+        DOM.heroHeadline.appendChild(span);
+
+    });
+
+}
+
+
+
+/* ==========================================================
+   SPOTLIGHT
+========================================================== */
+
+function setupSpotlight() {
+
+    const context = DOM.heroMaskCanvas.getContext("2d");
+
+    const mouse = {
+        x: -999,
+        y: -999
+    };
+
+    const spotlight = {
+        x: -999,
+        y: -999
+    };
+
+    resizeMask();
+
+    window.addEventListener("resize", resizeMask);
+
+    window.addEventListener("mousemove", (event) => {
+
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+
+    });
+
+    requestAnimationFrame(animateSpotlight);
+
+    function resizeMask() {
+
+        DOM.heroMaskCanvas.width = window.innerWidth;
+        DOM.heroMaskCanvas.height = window.innerHeight;
+
+    }
+
+    function animateSpotlight() {
+
+        requestAnimationFrame(animateSpotlight);
+
+        if (!STATE.heroVideoFinished) {
+
+            DOM.heroReveal.style.opacity = "0";
+            return;
+
+        }
+
+        DOM.heroReveal.style.opacity = "1";
+
+        spotlight.x = lerp(
+            spotlight.x,
+            mouse.x,
+            CONFIG.spotlight.smoothness
+        );
+
+        spotlight.y = lerp(
+            spotlight.y,
+            mouse.y,
+            CONFIG.spotlight.smoothness
+        );
+
+        context.clearRect(
+            0,
+            0,
+            DOM.heroMaskCanvas.width,
+            DOM.heroMaskCanvas.height
+        );
+
+        const gradient = context.createRadialGradient(
+            spotlight.x,
+            spotlight.y,
+            0,
+            spotlight.x,
+            spotlight.y,
+            CONFIG.spotlight.radius
+        );
+
+        gradient.addColorStop(0.00, "white");
+        gradient.addColorStop(0.40, "white");
+        gradient.addColorStop(0.60, "rgba(255,255,255,.75)");
+        gradient.addColorStop(0.75, "rgba(255,255,255,.40)");
+        gradient.addColorStop(0.88, "rgba(255,255,255,.12)");
+        gradient.addColorStop(1.00, "transparent");
+
+        context.fillStyle = gradient;
+
+        context.beginPath();
+
+        context.arc(
+            spotlight.x,
+            spotlight.y,
+            CONFIG.spotlight.radius,
+            0,
+            Math.PI * 2
+        );
+
+        context.fill();
+
+        const mask = DOM.heroMaskCanvas.toDataURL();
+
+        DOM.heroReveal.style.maskImage = `url(${mask})`;
+        DOM.heroReveal.style.webkitMaskImage = `url(${mask})`;
+
+        DOM.heroReveal.style.maskSize = "100% 100%";
+        DOM.heroReveal.style.webkitMaskSize = "100% 100%";
+
+    }
+
+}

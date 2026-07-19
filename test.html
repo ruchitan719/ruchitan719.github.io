@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Lumora</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  html, body { font-family: 'Instrument Serif', serif; }
+  .sys-font { font-family: system-ui, sans-serif; }
+
+  .liquid-glass {
+    background: rgba(255, 255, 255, 0.01);
+    background-blend-mode: luminosity;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: none;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-glass::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.4px;
+    background: linear-gradient(180deg,
+      rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+      rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+      rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  @keyframes trainBob {
+    0%, 100% { transform: translateY(0) scale(1.03); }
+    50% { transform: translateY(-6px) scale(1.03); }
+  }
+  .train-bob { animation: trainBob 3s ease-in-out infinite; }
+
+  .video-layer {
+    transition: opacity 1000ms ease-in-out;
+    opacity: 0;
+  }
+  .video-layer.active { opacity: 1; }
+
+  .hero-text {
+    color: #ffffff;
+    transition: color 700ms ease-in-out;
+  }
+  .hero-text.dark { color: #182C41; }
+
+  .menu-icon-wrap { position: relative; width: 20px; height: 20px; }
+  .menu-icon-wrap svg {
+    position: absolute; top: 0; left: 0;
+    transition: transform 300ms ease-in-out, opacity 300ms ease-in-out;
+  }
+  .icon-menu { opacity: 1; transform: rotate(0deg) scale(1); }
+  .icon-menu.hide { opacity: 0; transform: rotate(90deg) scale(0.75); }
+  .icon-x { opacity: 0; transform: rotate(-90deg) scale(0.75); }
+  .icon-x.show { opacity: 1; transform: rotate(0deg) scale(1); }
+
+  .mobile-menu-backdrop {
+    transition: opacity 500ms cubic-bezier(0.4,0,0.2,1);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .mobile-menu-backdrop.open { opacity: 1; pointer-events: auto; }
+
+  .mobile-menu-link {
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: opacity 500ms cubic-bezier(0.4,0,0.2,1), transform 500ms cubic-bezier(0.4,0,0.2,1);
+  }
+  .mobile-menu-link.open { opacity: 1; transform: translateY(0); }
+
+  .mobile-menu-cta {
+    transition: transform 500ms cubic-bezier(0.4,0,0.2,1), opacity 500ms cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .video-switch-btn {
+    border-bottom: 2px solid transparent;
+    opacity: 0.5;
+    transition: opacity 300ms ease-in-out, border-color 300ms ease-in-out, color 700ms ease-in-out;
+  }
+  .video-switch-btn:hover { opacity: 0.8; }
+  .video-switch-btn.active { opacity: 1; }
+  .video-switch-btn.active.light { border-bottom-color: #ffffff; }
+  .video-switch-btn.active.dark { border-bottom-color: #182C41; }
+</style>
+</head>
+
+<body class="bg-black">
+
+<section class="relative w-full h-screen overflow-hidden bg-black">
+
+  <!-- Background Video Layer -->
+  <video class="video-layer active absolute inset-0 w-full h-full object-cover" style="z-index:0" data-idx="0" autoplay muted loop playsinline
+    src="../images/j.mp4"></video>
+  <video class="video-layer absolute inset-0 w-full h-full object-cover" style="z-index:0" data-idx="1" autoplay muted loop playsinline
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4"></video>
+  <video class="video-layer absolute inset-0 w-full h-full object-cover" style="z-index:0" data-idx="2" autoplay muted loop playsinline
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4"></video>
+  <video class="video-layer absolute inset-0 w-full h-full object-cover" style="z-index:0" data-idx="3" autoplay muted loop playsinline
+    src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4"></video>
+
+  <!-- Transparent PNG overlay -->
+  <!-- <img
+    src="https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png"
+    alt=""
+    class="train-bob absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+    style="z-index:1" /> -->
+
+  <!-- Content Layer -->
+  <div class="relative flex flex-col h-full w-full px-4 sm:px-8 md:px-10 pt-5 sm:pt-8 pb-6 sm:pb-8" style="z-index:2">
+
+    <!-- Navigation -->
+    <nav class="flex items-center justify-between w-full">
+      <span class="italic text-white text-xl sm:text-2xl">Lumora</span>
+
+      <!-- Desktop nav -->
+      <div class="hidden md:flex items-center gap-1 liquid-glass rounded-full pl-6 pr-1.5 py-1.5 sys-font">
+        <a href="#" class="text-sm text-white/90 hover:text-white transition-colors px-3 py-1.5">How It Works</a>
+        <a href="#" class="text-sm text-white/90 hover:text-white transition-colors px-3 py-1.5">Features</a>
+        <a href="#" class="text-sm text-white/90 hover:text-white transition-colors px-3 py-1.5">Pricing</a>
+        <a href="#" class="text-sm text-white/90 hover:text-white transition-colors px-3 py-1.5">Community</a>
+        <button class="ml-2 bg-white text-black text-sm font-medium rounded-full px-5 py-1.5 hover:bg-white/90 transition-colors">Get Started</button>
+      </div>
+
+      <!-- Mobile hamburger -->
+      <button id="menuBtn" class="md:hidden liquid-glass rounded-full w-10 h-10 flex items-center justify-center" aria-label="Toggle menu">
+        <span class="menu-icon-wrap">
+          <svg id="iconMenu" class="icon-menu text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+          <svg id="iconX" class="icon-x text-white" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </span>
+      </button>
+    </nav>
+
+    <!-- Mobile menu overlay -->
+    <div id="mobileMenu" class="mobile-menu-backdrop fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center sys-font" style="z-index:50">
+      <div class="flex flex-col items-center gap-8">
+        <a href="#" class="mobile-menu-link text-white text-3xl" style="transition-delay:100ms">How It Works</a>
+        <a href="#" class="mobile-menu-link text-white text-3xl" style="transition-delay:150ms">Features</a>
+        <a href="#" class="mobile-menu-link text-white text-3xl" style="transition-delay:200ms">Pricing</a>
+        <a href="#" class="mobile-menu-link text-white text-3xl" style="transition-delay:250ms">Community</a>
+        <button class="mobile-menu-link mobile-menu-cta bg-white text-black text-lg font-medium rounded-full px-8 py-3 mt-4 hover:scale-105 active:scale-95 transition-transform" style="transition-delay:300ms">Get Started</button>
+      </div>
+    </div>
+
+    <!-- Hero content -->
+    <div class="flex flex-col items-center text-center mt-10 sm:mt-14 md:mt-16 px-2">
+      <div class="hero-text liquid-glass rounded-full px-4 sm:px-5 py-2 sys-font text-xs sm:text-sm mb-6 sm:mb-8">
+        Over 10,000 minds already finding their clarity
+      </div>
+
+      <h1 class="hero-text text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] leading-[1.1] max-w-4xl">
+        My Journey<br />
+      </h1>
+
+      <p class="hero-text sys-font max-w-xl leading-relaxed mt-5 sm:mt-6 text-sm sm:text-base opacity-90">
+        somewhere between places and becoming.
+      </p>
+
+      <!-- <div class="liquid-glass rounded-full flex items-center p-1.5 mt-8 sm:mt-10 w-full max-w-[320px] sm:max-w-sm sys-font">
+        <input type="email" placeholder="Your Best Email" class="hero-text bg-transparent outline-none border-none flex-1 min-w-0 px-4 py-2 text-sm" />
+        <button class="bg-white text-black text-sm font-medium rounded-full px-4 sm:px-5 py-2 whitespace-nowrap hover:bg-white/90 transition-colors">Get Early Access</button>
+      </div> -->
+
+      <!-- Video switcher -->
+      <div id="videoSwitcher" class="flex items-center gap-4 sm:gap-6 mt-9 sm:mt-12 sys-font">
+        <button class="video-switch-btn hero-text active light text-xs sm:text-sm pb-1" data-idx="0">Japan</button>
+        <button class="video-switch-btn hero-text text-xs sm:text-sm pb-1" data-idx="1">Singapore</button>
+        <button class="video-switch-btn hero-text text-xs sm:text-sm pb-1" data-idx="2">Vietnam</button>
+        <button class="video-switch-btn hero-text text-xs sm:text-sm pb-1" data-idx="3">Bali</button>
+      </div>
+    </div>
+
+    <div class="flex-1"></div>
+
+   
+  </div>
+</section>
+<section class="journey-wrap">  
+<article class="journey">
+  <p class="intro journey-intro">the journey begins</p>
+ 
+  <svg id="journey-svg"></svg>
+
+  <div id="countries"></div>
+
+</article>
+
+<script src="js/travel.js"></script>
+<p class="journey-end">…and still going</p>
+</section>
+<script>
+  const DARK_VIDEO_INDEX = 2;
+  let activeVideo = 0;
+  let isTransitioning = false;
+
+  const videos = document.querySelectorAll('.video-layer');
+  const switchBtns = document.querySelectorAll('.video-switch-btn');
+  const heroTexts = document.querySelectorAll('.hero-text');
+
+  function applyDarkMode(isDark) {
+    heroTexts.forEach(el => el.classList.toggle('dark', isDark));
+    switchBtns.forEach(btn => {
+      btn.classList.toggle('light', !isDark);
+      btn.classList.toggle('dark', isDark);
+    });
+  }
+
+  function setActiveVideo(idx) {
+    videos.forEach(v => v.classList.toggle('active', v.dataset.idx === String(idx)));
+    switchBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.idx === String(idx)));
+    applyDarkMode(idx === DARK_VIDEO_INDEX);
+  }
+
+  switchBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = Number(btn.dataset.idx);
+      if (idx === activeVideo || isTransitioning) return;
+      activeVideo = idx;
+      setActiveVideo(idx);
+      isTransitioning = true;
+      setTimeout(() => { isTransitioning = false; }, 1000);
+    });
+  });
+
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const iconMenu = document.getElementById('iconMenu');
+  const iconX = document.getElementById('iconX');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuLinks = mobileMenu.querySelectorAll('.mobile-menu-link');
+  let menuOpen = false;
+
+  function setMenuOpen(open) {
+    menuOpen = open;
+    iconMenu.classList.toggle('hide', open);
+    iconX.classList.toggle('show', open);
+    mobileMenu.classList.toggle('open', open);
+    menuLinks.forEach(link => link.classList.toggle('open', open));
+  }
+
+  menuBtn.addEventListener('click', () => setMenuOpen(!menuOpen));
+  mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) setMenuOpen(false);
+  });
+</script>
+
+</body>
+</html>
