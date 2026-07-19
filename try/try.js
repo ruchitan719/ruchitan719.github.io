@@ -8,7 +8,6 @@ const DOM = {};
 // pending target per video instead of stacking dozens of seek operations.
 const VIDEO_SEEKS = new WeakMap();
 const SEEK_TOLERANCE = 1 / 30;
-const IS_TOUCH_DEVICE = window.matchMedia("(pointer:coarse)").matches;
 
 /* ==========================================================
    STATE
@@ -155,12 +154,6 @@ function onIntroEnded(){
     gsap.set(DOM.introVideo, { opacity: 0 });
     gsap.set(DOM.transitionVideo, { opacity: 1 });
 
-    // iOS can leave a never-played video transparent while its currentTime is
-    // being scrubbed. Start then immediately pause both scroll clips once so
-    // their first frames are decoded before the visitor begins scrolling.
-    primeScrollVideo(DOM.transitionVideo);
-    primeScrollVideo(DOM.journeyVideo);
-
     // Build the pins only after the intro finishes. This prevents ScrollTrigger
     // from responding to scroll input while the intro has the page locked.
     createStoryTrigger();
@@ -285,24 +278,10 @@ function performVideoSeek(video, state){
 
     }, { once:true });
 
-    if (!IS_TOUCH_DEVICE && typeof video.fastSeek === "function") {
+    if (typeof video.fastSeek === "function") {
         video.fastSeek(state.targetTime);
     } else {
         video.currentTime = state.targetTime;
     }
-
-}
-
-function primeScrollVideo(video){
-
-    video.play()
-        .then(() => {
-            video.pause();
-            video.currentTime = 0;
-        })
-        .catch(() => {
-            // Seeking will still be attempted during scroll if the browser
-            // chooses not to warm this muted background clip.
-        });
 
 }
