@@ -126,8 +126,10 @@ function setupIntro(){
     DOM.introVideo.addEventListener("error", onIntroEnded, { once:true });
 
     DOM.introVideo.play().catch(() => {
-        // Muted autoplay normally succeeds. The native controls are not
-        // needed here; a user interaction will allow the video to resume.
+        // Some phone settings (Low Power Mode, Data Saver, or browser policy)
+        // can still block autoplay. Continue into the scroll story instead of
+        // trapping the visitor behind the intro lock.
+        onIntroEnded();
     });
 
 }
