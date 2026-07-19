@@ -313,6 +313,11 @@ body.intro-locked{
 
 @media (max-width:767px){
 
+    html,
+    body{
+        touch-action:pan-y;
+    }
+
     .hero{
         height:320vh;
     }
@@ -329,6 +334,7 @@ body.intro-locked{
         width:100%;
         height:100%;
         object-position:58% center;
+        pointer-events:none;
     }
 
     .hero-copy{

@@ -43,21 +43,11 @@ function init(){
 
     cacheDOM();
 
+    prepareStoryVideos();
+
     lockScroll();
 
     setupIntro();
-
-    setupViewportRefresh();
-
-}
-
-function setupViewportRefresh(){
-
-    // Mobile browsers change viewport height on rotation. Recalculate the
-    // pinned scroll distances once that change has settled.
-    window.addEventListener("orientationchange", () => {
-        window.setTimeout(() => ScrollTrigger.refresh(), 250);
-    });
 
 }
 
@@ -78,6 +68,20 @@ function cacheDOM(){
     DOM.journeyVideo = document.getElementById("journey-video");
 
     DOM.scrollIndicator = document.getElementById("scroll-indicator");
+
+}
+
+function prepareStoryVideos(){
+
+    [DOM.introVideo, DOM.transitionVideo, DOM.journeyVideo].forEach(video => {
+        video.muted = true;
+        video.defaultMuted = true;
+        video.playsInline = true;
+        video.preload = "auto";
+        video.setAttribute("muted", "");
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
+    });
 
 }
 
